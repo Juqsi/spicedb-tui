@@ -1,0 +1,5 @@
+{
+  "endpoint": "localhost:50051",
+  "token": "foobar",
+  "language": "en"
+}
