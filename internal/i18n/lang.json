@@ -28,7 +28,8 @@
     "deleting_relation": "Deleting relation...",
     "error_deleting_relation": "Error deleting relation: %v",
     "relation_deleted_success": "Relation deleted successfully.",
-    "delete_relation": "Delete relation"
+    "delete_relation": "Delete relation",
+    "loading": "loading..."
   },
   "de": {
     "app_title": "SpiceDB TUI Menü",
@@ -59,6 +60,7 @@
     "deleting_relation": "Lösche Relation...",
     "error_deleting_relation": "Fehler beim Löschen der Relation: %v",
     "relation_deleted_success": "Relation erfolgreich gelöscht.",
-    "delete_relation": "Relation löschen"
+    "delete_relation": "Relation löschen",
+    "loading": "laden..."
   }
 }

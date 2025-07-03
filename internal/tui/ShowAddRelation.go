@@ -29,7 +29,7 @@ func ShowAddRelation(app *tview.Application) {
 				return
 			}
 
-			AsyncCall(app, "[yellow]"+i18n.T("adding_relation"), func() string {
+			AsyncCall(app, "[yellow]"+i18n.T("adding_relation"), func() (string, string) {
 				tuple := &v1.Relationship{
 					Resource: &v1.ObjectReference{ObjectType: rp[0], ObjectId: rp[1]},
 					Relation: rel,
@@ -39,9 +39,9 @@ func ShowAddRelation(app *tview.Application) {
 					Updates: []*v1.RelationshipUpdate{{Operation: v1.RelationshipUpdate_OPERATION_CREATE, Relationship: tuple}},
 				})
 				if err != nil {
-					return fmt.Sprintf("Error adding relation: %v", err)
+					return fmt.Sprintf("Error adding relation: %v", err), "Error"
 				}
-				return "Relation added successfully."
+				return "Relation added successfully.", "Success"
 			})
 		}).
 		AddButton(i18n.T("exit"), func() { app.SetRoot(BuildMainMenu(app), true) })

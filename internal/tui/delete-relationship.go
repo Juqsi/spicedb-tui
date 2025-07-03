@@ -34,7 +34,7 @@ func ShowDeleteRelation(app *tview.Application) {
 				Subject:  &v1.SubjectReference{Object: &v1.ObjectReference{ObjectType: sp[0], ObjectId: sp[1]}},
 			}
 
-			AsyncCall(app, i18n.T("deleting_relation"), func() string {
+			AsyncCall(app, i18n.T("deleting_relation"), func() (string, string) {
 				_, err := client.Client.WriteRelationships(context.Background(), &v1.WriteRelationshipsRequest{
 					Updates: []*v1.RelationshipUpdate{{
 						Operation:    v1.RelationshipUpdate_OPERATION_DELETE,
@@ -42,9 +42,9 @@ func ShowDeleteRelation(app *tview.Application) {
 					}},
 				})
 				if err != nil {
-					return fmt.Sprintf(i18n.T("error_deleting_relation"), err)
+					return fmt.Sprintf(i18n.T("error_deleting_relation"), err), "Error"
 				}
-				return fmt.Sprintf(i18n.T("relation_deleted_success"))
+				return fmt.Sprintf(i18n.T("relation_deleted_success")), "Delete Relation"
 			})
 		}).
 		AddButton(i18n.T("exit"), func() { app.SetRoot(BuildMainMenu(app), true) })

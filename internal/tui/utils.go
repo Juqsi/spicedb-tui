@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
+	"spicedb-tui/internal/i18n"
 )
 
 func ShowMessageAndReturnToMenu(app *tview.Application, msg string, args ...interface{}) {
@@ -32,34 +33,32 @@ func AddFormReturnESC(form *tview.Form, app *tview.Application, menuFunc func())
 	})
 }
 
-func AsyncCall(app *tview.Application, loadingText string, fn func() string) {
+func AsyncCall(app *tview.Application, loadingText string, fn func() (result string, title string)) {
 	loadingView := tview.NewTextView().
 		SetText(loadingText).
 		SetDynamicColors(true).
 		SetBorder(true).
-		SetTitle("Loading...")
+		SetTitle("⏳ " + i18n.T("loading"))
 
 	app.SetRoot(loadingView, true)
 
 	go func() {
-		go func() {
-			result := fn()
-			app.QueueUpdateDraw(func() {
-				var resultView *tview.TextView = tview.NewTextView().
-					SetDynamicColors(true).
-					SetText(result)
-				resultView.SetDoneFunc(func(key tcell.Key) {
+		resultText, resultTitle := fn()
+
+		app.QueueUpdateDraw(func() {
+			tv := tview.NewTextView().SetDynamicColors(true).SetScrollable(true)
+			tv.SetBorder(true).
+				SetTitle(resultTitle)
+			tv.SetText(resultText)
+			tv.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+				if event.Key() == tcell.KeyEsc {
 					app.SetRoot(BuildMainMenu(app), true)
-				})
-				resultView.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
-					if event.Key() == tcell.KeyEsc {
-						app.SetRoot(BuildMainMenu(app), true)
-						return nil
-					}
-					return event
-				})
-				app.SetRoot(resultView, true)
+					return nil
+				}
+				return event
 			})
-		}()
+
+			app.SetRoot(tv, true)
+		})
 	}()
 }
