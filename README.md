@@ -1,4 +1,4 @@
-# 🌶️ spicui
+# spicui
 
 **spicui** is a spicy terminal user interface (TUI) for [SpiceDB](https://spicedb.dev).  
 Manage and explore your SpiceDB instance directly from the terminal – modern, colorful, efficient, and optionally multilingual.
@@ -7,14 +7,14 @@ Manage and explore your SpiceDB instance directly from the terminal – modern, 
 
 ## Features
 
-- 🔎 **View and upload schema**
-- 📋 **Browse, create, and delete relationships (tuples)**
-- ✅ **Check permissions interactively**
-- 💾 **Create and restore backups**
-- 🚀 **Import demo or example data**
-- 🌍 **Multilingual interface (e.g., English & German)**
-- ⚡ **Async operations with loading indicators (the TUI stays responsive!)**
-- 🌶️ **Chili-inspired look and easy keyboard navigation**
+-  **View and upload schema**
+-  **Browse, create, and delete relationships (tuples)**
+-  **Check permissions interactively**
+-  **Create and restore backups**
+-  **Import demo or example data**
+-  **Multilingual interface (e.g., English & German)**
+-  **Async operations with loading indicators (the TUI stays responsive!)**
+-  **Chili-inspired look and easy keyboard navigation**
 
 ---
 
@@ -53,7 +53,7 @@ You can set your SpiceDB endpoint, token, and language – or edit these setting
 
 - Go 1.20 or newer
 - A running [SpiceDB](https://spicedb.dev) instance local
-- A valid API token
+- A valid preshared token
 
 ---
 
