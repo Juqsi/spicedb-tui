@@ -42,7 +42,24 @@ func AsyncCall(app *tview.Application, loadingText string, fn func() string) {
 	app.SetRoot(loadingView, true)
 
 	go func() {
-		result := fn()
-		ShowMessageAndReturnToMenu(app, result)
+		go func() {
+			result := fn()
+			app.QueueUpdateDraw(func() {
+				var resultView *tview.TextView = tview.NewTextView().
+					SetDynamicColors(true).
+					SetText(result)
+				resultView.SetDoneFunc(func(key tcell.Key) {
+					app.SetRoot(BuildMainMenu(app), true)
+				})
+				resultView.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+					if event.Key() == tcell.KeyEsc {
+						app.SetRoot(BuildMainMenu(app), true)
+						return nil
+					}
+					return event
+				})
+				app.SetRoot(resultView, true)
+			})
+		}()
 	}()
 }

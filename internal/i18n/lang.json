@@ -19,7 +19,16 @@
     "quit": "Quit",
     "error_loading_config": "Error loading configuration: %v",
     "error_running_tui": "Error running TUI: %v",
-    "confirm_exit": "Do you really want to exit? (y/n)"
+    "confirm_exit": "Do you really want to exit? (y/n)",
+    "adding_relation": "Adding relation, please wait...",
+    "resource": "Resource (type:id)",
+    "relation": "Relation",
+    "subject": "Subject (type:id)",
+    "invalid_format": "Invalid format (type:id)",
+    "deleting_relation": "Deleting relation...",
+    "error_deleting_relation": "Error deleting relation: %v",
+    "relation_deleted_success": "Relation deleted successfully.",
+    "delete_relation": "Delete relation"
   },
   "de": {
     "app_title": "SpiceDB TUI Menü",
@@ -41,6 +50,15 @@
     "quit": "Beenden",
     "error_loading_config": "Fehler beim Laden der Konfiguration: %v",
     "error_running_tui": "Fehler beim Starten der TUI: %v",
-    "confirm_exit": "Möchten Sie das Programm wirklich beenden? (j/n)"
+    "confirm_exit": "Möchten Sie das Programm wirklich beenden? (j/n)",
+    "adding_relation": "Füge Beziehung hinzu, bitte warten...",
+    "resource": "Ressource (typ:id)",
+    "relation": "Relation",
+    "subject": "Subjekt (typ:id)",
+    "invalid_format": "Ungültiges Format (typ:id)",
+    "deleting_relation": "Lösche Relation...",
+    "error_deleting_relation": "Fehler beim Löschen der Relation: %v",
+    "relation_deleted_success": "Relation erfolgreich gelöscht.",
+    "delete_relation": "Relation löschen"
   }
 }

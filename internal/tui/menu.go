@@ -24,6 +24,7 @@ func BuildMainMenu(app *tview.Application) *tview.List {
 		AddItem(i18n.T("user_relations"), "", 'u', func() { ShowUserRelations(app) }).
 		AddItem(i18n.T("all_tuples"), "", 'a', func() { ShowAllTuples(app) }).
 		AddItem(i18n.T("add_relation"), "", 'r', func() { ShowAddRelation(app) }).
+		AddItem(i18n.T("delete_relation"), "", 'd', func() { ShowDeleteRelation(app) }).
 		AddItem(i18n.T("permission_check"), "", 'p', func() { ShowPermissionCheck(app) }).
 		AddItem(i18n.T("backup_create"), "", 'b', func() { ShowBackupCreate(app) }).
 		AddItem(i18n.T("backup_restore"), "", 'l', func() { ShowBackupRestore(app) }).

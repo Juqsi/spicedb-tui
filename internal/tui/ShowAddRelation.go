@@ -29,7 +29,7 @@ func ShowAddRelation(app *tview.Application) {
 				return
 			}
 
-			AsyncCall(app, "[yellow]Adding relation, please wait...", func() string {
+			AsyncCall(app, "[yellow]"+i18n.T("adding_relation"), func() string {
 				tuple := &v1.Relationship{
 					Resource: &v1.ObjectReference{ObjectType: rp[0], ObjectId: rp[1]},
 					Relation: rel,
