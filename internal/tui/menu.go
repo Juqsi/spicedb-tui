@@ -4,6 +4,7 @@ import (
 	"github.com/rivo/tview"
 	"os"
 	"spicedb-tui/internal/client"
+	"spicedb-tui/internal/config"
 	"spicedb-tui/internal/i18n"
 )
 
@@ -35,6 +36,11 @@ func BuildMainMenu(app *tview.Application) *tview.List {
 		AddItem(i18n.T("backup_create"), "", 'b', func() { ShowBackupCreate() }).
 		AddItem(i18n.T("backup_restore"), "", 'l', func() { ShowBackupRestore() }).
 		AddItem(i18n.T("data_import"), "", 'i', func() { ShowDataImport(app) }).
+		AddItem(i18n.T("config_menu"), "", 'c', func() {
+			config.ShowConfigPage(app, appPages, func(app *tview.Application) {
+				StartTUI(app)
+			})
+		}).
 		AddItem(i18n.T("quit"), "", 'q', func() { confirmExit(app) })
 
 	menu.SetBorder(true).SetTitle(i18n.T("app_title")).SetTitleAlign(tview.AlignLeft)

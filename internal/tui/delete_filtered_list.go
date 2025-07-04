@@ -13,13 +13,17 @@ import (
 )
 
 func ShowDeleteRelationsFiltered(app *tview.Application) {
+	showDeleteRelationsFilteredForm(app, "", "", "", ".*")
+}
+
+func showDeleteRelationsFilteredForm(app *tview.Application, resVal, subVal, relVal, regexVal string) {
 	form := tview.NewForm()
 	appPages.AddAndSwitchToPage("preview", AddEscBack(form, "mainmenu"), true)
 	form.
-		AddInputField(i18n.T("resource_optional"), "", 30, nil, nil).
-		AddInputField(i18n.T("subject_optional"), "", 30, nil, nil).
-		AddInputField(i18n.T("relation_optional"), "", 20, nil, nil).
-		AddInputField(i18n.T("id_regex"), ".*", 30, nil, nil).
+		AddInputField(i18n.T("resource_optional"), resVal, 30, nil, nil).
+		AddInputField(i18n.T("subject_optional"), subVal, 30, nil, nil).
+		AddInputField(i18n.T("relation_optional"), relVal, 20, nil, nil).
+		AddInputField(i18n.T("id_regex"), regexVal, 30, nil, nil).
 		AddButton(i18n.T("start_delete"), func() {
 			res := form.GetFormItemByLabel(i18n.T("resource_optional")).(*tview.InputField).GetText()
 			sub := form.GetFormItemByLabel(i18n.T("subject_optional")).(*tview.InputField).GetText()
@@ -39,8 +43,6 @@ func ShowDeleteRelationsFiltered(app *tview.Application) {
 					filter.ResourceType = r[0]
 					if len(r) == 2 {
 						filter.OptionalResourceId = r[1]
-					} else {
-						filter.OptionalResourceId = ""
 					}
 				}
 				if sub != "" {
@@ -50,12 +52,9 @@ func ShowDeleteRelationsFiltered(app *tview.Application) {
 					}
 					if len(s) == 2 {
 						sf.OptionalSubjectId = s[1]
-					} else {
-						sf.OptionalSubjectId = ""
 					}
 					filter.OptionalSubjectFilter = sf
 				}
-
 				if rel != "" {
 					filter.OptionalRelation = rel
 				}
@@ -149,7 +148,7 @@ func ShowDeleteRelationsFiltered(app *tview.Application) {
 							}()
 							return nil
 						case tcell.KeyEsc:
-							appPages.SwitchToPage("form")
+							showDeleteRelationsFilteredForm(app, res, sub, rel, regexInput)
 							return nil
 						}
 						return event

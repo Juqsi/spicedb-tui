@@ -33,13 +33,19 @@ func LoadOrAskForConfig(app *tview.Application, start func(*tview.Application)) 
 				i18n.SetLanguage(Current.Language)
 			}
 		}
-	} else {
-		defaultConfigBytes, _ := json.MarshalIndent(Current, "", "  ")
-		if err := os.WriteFile(configPath, defaultConfigBytes, 0644); err != nil {
-			return fmt.Errorf("could not write config.json: %v", err)
-		}
+		start(app)
+		return nil
 	}
 
+	defaultConfigBytes, _ := json.MarshalIndent(Current, "", "  ")
+	if err := os.WriteFile(configPath, defaultConfigBytes, 0644); err != nil {
+		return fmt.Errorf("could not write config.json: %v", err)
+	}
+	ShowConfigPage(app, nil, start)
+	return nil
+}
+
+func ShowConfigPage(app *tview.Application, appPages *tview.Pages, onSave func(*tview.Application)) {
 	langs := []string{"en", "de"}
 	var defaultLangIndex int
 	for i, l := range langs {
@@ -55,14 +61,14 @@ func LoadOrAskForConfig(app *tview.Application, start func(*tview.Application)) 
 		AddInputField(i18n.T("token"), Current.Token, 40, nil, func(text string) {
 			Current.Token = text
 		}).
-		AddDropDown("Language", langs, defaultLangIndex, func(option string, idx int) {
+		AddDropDown(i18n.T("language"), langs, defaultLangIndex, func(option string, idx int) {
 			Current.Language = option
 			i18n.SetLanguage(option)
 		}).
 		AddButton(i18n.T("continue"), func() {
 			data, _ := json.MarshalIndent(Current, "", "  ")
 			os.WriteFile(configPath, data, 0644)
-			start(app)
+			onSave(app)
 		}).
 		AddButton(i18n.T("exit"), func() {
 			app.Stop()
@@ -70,6 +76,9 @@ func LoadOrAskForConfig(app *tview.Application, start func(*tview.Application)) 
 		})
 
 	form.SetBorder(true).SetTitle(i18n.T("config_title")).SetTitleAlign(tview.AlignLeft)
-	app.SetRoot(form, true)
-	return nil
+	if appPages != nil {
+		appPages.AddAndSwitchToPage("config", form, true)
+	} else {
+		app.SetRoot(form, true)
+	}
 }
