@@ -4,14 +4,15 @@ import (
 	"context"
 	"github.com/rivo/tview"
 	"spicedb-tui/internal/client"
+	"spicedb-tui/internal/i18n"
 )
 
 func ShowSchema(app *tview.Application) {
-	AsyncCall(app, "[yellow]loading...", func() (string, string) {
+	AsyncCallPages(app, i18n.T("loading"), func() (string, string) {
 		rsp, err := client.Client.ReadSchema(context.Background(), nil)
 		if err != nil {
-			return "[red]Error: " + err.Error(), "Error"
+			return i18n.T("error_loading_schema", err), i18n.T("error")
 		}
-		return rsp.SchemaText, "SpiceDB Schema"
+		return rsp.SchemaText, i18n.T("schema_title")
 	})
 }

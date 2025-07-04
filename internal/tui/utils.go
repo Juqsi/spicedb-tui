@@ -1,50 +1,40 @@
 package tui
 
 import (
-	"fmt"
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
 	"spicedb-tui/internal/i18n"
 )
 
-func ShowMessageAndReturnToMenu(app *tview.Application, msg string, args ...interface{}) {
-	text := fmt.Sprintf(msg, args...)
-	tv := tview.NewTextView().SetText(text).
+func ShowMessageAndReturnToMenu(msg string, args ...interface{}) {
+	text := i18n.T(msg, args...)
+	tv := tview.NewTextView().
+		SetText(text).
+		SetDynamicColors(true).
 		SetDoneFunc(func(key tcell.Key) {
-			app.SetRoot(BuildMainMenu(app), true)
+			appPages.SwitchToPage("mainmenu")
 		}).
 		SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
-			if event.Key() == tcell.KeyEsc {
-				app.SetRoot(BuildMainMenu(app), true)
+			// ESC oder beliebige Taste schließt zurück zum Hauptmenü
+			if event.Key() == tcell.KeyEsc || event.Key() == tcell.KeyEnter || event.Key() == tcell.KeyRune {
+				appPages.SwitchToPage("mainmenu")
 				return nil
 			}
 			return event
 		})
-	app.SetRoot(tv, true)
+	tv.SetBorder(true).SetTitle(i18n.T("message"))
+	appPages.AddAndSwitchToPage("msgpage", tv, true)
 }
 
-func AddFormReturnESC(form *tview.Form, app *tview.Application, menuFunc func()) {
-	form.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
-		if event.Key() == tcell.KeyEsc {
-			menuFunc()
-			return nil
-		}
-		return event
-	})
-}
-
-func AsyncCall(app *tview.Application, loadingText string, fn func() (result string, title string)) {
+func AsyncCallPages(app *tview.Application, loadingText string, fn func() (result string, title string)) {
 	loadingView := tview.NewTextView().
 		SetText(loadingText).
 		SetDynamicColors(true).
 		SetBorder(true).
 		SetTitle("⏳ " + i18n.T("loading"))
-
-	app.SetRoot(loadingView, true)
-
+	appPages.AddAndSwitchToPage("loading", loadingView, true)
 	go func() {
 		resultText, resultTitle := fn()
-
 		app.QueueUpdateDraw(func() {
 			tv := tview.NewTextView().SetDynamicColors(true).SetScrollable(true)
 			tv.SetBorder(true).
@@ -52,13 +42,42 @@ func AsyncCall(app *tview.Application, loadingText string, fn func() (result str
 			tv.SetText(resultText)
 			tv.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 				if event.Key() == tcell.KeyEsc {
-					app.SetRoot(BuildMainMenu(app), true)
+					appPages.SwitchToPage("mainmenu")
 					return nil
 				}
 				return event
 			})
-
-			app.SetRoot(tv, true)
+			appPages.AddAndSwitchToPage("asyncresult", tv, true)
 		})
 	}()
+}
+
+func AddEscBack(prim tview.Primitive, toPage string) tview.Primitive {
+	if tv, ok := prim.(*tview.TextView); ok {
+		oldIC := tv.GetInputCapture()
+		tv.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+			if event.Key() == tcell.KeyEsc {
+				appPages.SwitchToPage(toPage)
+				return nil
+			}
+			if oldIC != nil {
+				return oldIC(event)
+			}
+			return event
+		})
+	}
+	if f, ok := prim.(*tview.Form); ok {
+		oldIC := f.GetInputCapture()
+		f.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+			if event.Key() == tcell.KeyEsc {
+				appPages.SwitchToPage(toPage)
+				return nil
+			}
+			if oldIC != nil {
+				return oldIC(event)
+			}
+			return event
+		})
+	}
+	return prim
 }

@@ -2,8 +2,6 @@ package tui
 
 import (
 	"context"
-	"fmt"
-
 	v1 "github.com/authzed/authzed-go/proto/authzed/api/v1"
 	"github.com/rivo/tview"
 	"spicedb-tui/internal/client"
@@ -13,23 +11,23 @@ import (
 
 func ShowAddRelation(app *tview.Application) {
 	form := tview.NewForm()
-	form = tview.NewForm().
-		AddInputField("Resource (type:id)", "", 30, nil, nil).
-		AddInputField("Relation", "", 20, nil, nil).
-		AddInputField("Subject (type:id)", "", 30, nil, nil).
+	form.
+		AddInputField(i18n.T("resource"), "", 30, nil, nil).
+		AddInputField(i18n.T("relation"), "", 20, nil, nil).
+		AddInputField(i18n.T("subject"), "", 30, nil, nil).
 		AddButton(i18n.T("continue"), func() {
-			res := form.GetFormItemByLabel("Resource (type:id)").(*tview.InputField).GetText()
-			rel := form.GetFormItemByLabel("Relation").(*tview.InputField).GetText()
-			sub := form.GetFormItemByLabel("Subject (type:id)").(*tview.InputField).GetText()
+			res := form.GetFormItemByLabel(i18n.T("resource")).(*tview.InputField).GetText()
+			rel := form.GetFormItemByLabel(i18n.T("relation")).(*tview.InputField).GetText()
+			sub := form.GetFormItemByLabel(i18n.T("subject")).(*tview.InputField).GetText()
 
 			rp := strings.SplitN(res, ":", 2)
 			sp := strings.SplitN(sub, ":", 2)
 			if len(rp) != 2 || len(sp) != 2 {
-				ShowMessageAndReturnToMenu(app, "Invalid format (type:id)")
+				ShowMessageAndReturnToMenu(i18n.T("invalid_format"))
 				return
 			}
 
-			AsyncCall(app, "[yellow]"+i18n.T("adding_relation"), func() (string, string) {
+			AsyncCallPages(app, i18n.T("adding_relation"), func() (string, string) {
 				tuple := &v1.Relationship{
 					Resource: &v1.ObjectReference{ObjectType: rp[0], ObjectId: rp[1]},
 					Relation: rel,
@@ -39,14 +37,14 @@ func ShowAddRelation(app *tview.Application) {
 					Updates: []*v1.RelationshipUpdate{{Operation: v1.RelationshipUpdate_OPERATION_CREATE, Relationship: tuple}},
 				})
 				if err != nil {
-					return fmt.Sprintf("Error adding relation: %v", err), "Error"
+					return i18n.T("error_adding_relation", err), i18n.T("error")
 				}
-				return "Relation added successfully.", "Success"
+				return i18n.T("relation_added_success"), i18n.T("success")
 			})
 		}).
-		AddButton(i18n.T("exit"), func() { app.SetRoot(BuildMainMenu(app), true) })
+		AddButton(i18n.T("exit"), func() { appPages.SwitchToPage("mainmenu") })
 
 	form.SetBorder(true).SetTitle(i18n.T("add_relation")).SetTitleAlign(tview.AlignLeft)
-	AddFormReturnESC(form, app, func() { app.SetRoot(BuildMainMenu(app), true) })
-	app.SetRoot(form, true)
+	AddEscBack(form, "mainmenu")
+	appPages.AddAndSwitchToPage("addrelation", form, true)
 }

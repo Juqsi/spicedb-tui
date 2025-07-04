@@ -3,25 +3,23 @@ package tui
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"os"
 	"strings"
 
 	v1 "github.com/authzed/authzed-go/proto/authzed/api/v1"
-	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
 	"spicedb-tui/internal/client"
 	"spicedb-tui/internal/i18n"
 )
 
-func ShowBackupCreate(app *tview.Application) {
+func ShowBackupCreate() {
 	tv := tview.NewTextView().SetDynamicColors(true).SetScrollable(true)
 	tv.SetBorder(true).SetTitle(i18n.T("backup_create"))
 
 	schemaResp, err := client.Client.ReadSchema(context.Background(), &v1.ReadSchemaRequest{})
 	if err != nil {
-		tv.SetText(fmt.Sprintf("[red]Error reading schema: %v", err))
-		app.SetRoot(tv, true)
+		tv.SetText(i18n.T("error_reading_schema", err))
+		appPages.AddAndSwitchToPage("backupcreate", AddEscBack(tv, "mainmenu"), true)
 		return
 	}
 
@@ -42,7 +40,7 @@ func ShowBackupCreate(app *tview.Application) {
 			RelationshipFilter: &v1.RelationshipFilter{ResourceType: objType},
 		})
 		if err != nil {
-			tv.Write([]byte(fmt.Sprintf("[red]Error for %s: %v\n", objType, err)))
+			tv.Write([]byte(i18n.T("error_type", objType, err) + "\n"))
 			continue
 		}
 		for {
@@ -58,25 +56,22 @@ func ShowBackupCreate(app *tview.Application) {
 	_ = os.WriteFile("spicedb-backup.json", []byte(strings.Join(backupData, "\n")), 0644)
 
 	if len(backupData) == 0 {
-		tv.SetText("[yellow]No tuples to backup.")
+		tv.SetText(i18n.T("no_tuples_to_backup"))
 	} else {
 		tv.SetText(strings.Join(backupData, "\n"))
 	}
 
-	tv.SetDoneFunc(func(key tcell.Key) { app.SetRoot(BuildMainMenu(app), true) })
-	app.SetRoot(tv, true)
+	appPages.AddAndSwitchToPage("backupcreate", AddEscBack(tv, "mainmenu"), true)
 }
 
-func ShowBackupRestore(app *tview.Application) {
+func ShowBackupRestore() {
 	form := tview.NewForm()
-
 	var jsonText string
 	var filePath string
-
-	form.AddInputField("Backup JSON lines (optional)", "", 60, nil, func(text string) {
+	form.AddInputField(i18n.T("backup_json_input"), "", 60, nil, func(text string) {
 		jsonText = text
 	}).
-		AddInputField("Path to file (optional)", "", 60, nil, func(text string) {
+		AddInputField(i18n.T("path_to_file"), "", 60, nil, func(text string) {
 			filePath = text
 		}).
 		AddButton(i18n.T("continue"), func() {
@@ -84,14 +79,14 @@ func ShowBackupRestore(app *tview.Application) {
 			if filePath != "" {
 				data, err := os.ReadFile(filePath)
 				if err != nil {
-					ShowMessageAndReturnToMenu(app, "Error reading file: %v", err)
+					ShowMessageAndReturnToMenu(i18n.T("error_reading_file", err))
 					return
 				}
 				input = string(data)
 			} else if jsonText != "" {
 				input = jsonText
 			} else {
-				ShowMessageAndReturnToMenu(app, "Please provide JSON or file path.")
+				ShowMessageAndReturnToMenu(i18n.T("provide_json_or_file"))
 				return
 			}
 
@@ -109,21 +104,21 @@ func ShowBackupRestore(app *tview.Application) {
 						Relationship: &r,
 					})
 				} else {
-					ShowMessageAndReturnToMenu(app, "Invalid JSON line: %v", err)
+					ShowMessageAndReturnToMenu(i18n.T("invalid_json_line", err))
 					return
 				}
 			}
 
 			_, err := client.Client.WriteRelationships(context.Background(), &v1.WriteRelationshipsRequest{Updates: updates})
 			if err != nil {
-				ShowMessageAndReturnToMenu(app, "Error restoring: %v", err)
+				ShowMessageAndReturnToMenu(i18n.T("error_restoring", err))
 			} else {
-				ShowMessageAndReturnToMenu(app, "Backup restored successfully.")
+				ShowMessageAndReturnToMenu(i18n.T("backup_restored_success"))
 			}
 		}).
-		AddButton(i18n.T("exit"), func() { app.SetRoot(BuildMainMenu(app), true) })
+		AddButton(i18n.T("exit"), func() { appPages.SwitchToPage("mainmenu") })
 
 	form.SetBorder(true).SetTitle(i18n.T("backup_restore")).SetTitleAlign(tview.AlignLeft)
-	AddFormReturnESC(form, app, func() { app.SetRoot(BuildMainMenu(app), true) })
-	app.SetRoot(form, true)
+	AddEscBack(form, "mainmenu")
+	appPages.AddAndSwitchToPage("backuprestore", form, true)
 }

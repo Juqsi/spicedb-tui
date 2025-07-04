@@ -7,13 +7,18 @@ import (
 	"spicedb-tui/internal/i18n"
 )
 
+var appPages *tview.Pages
+
 func StartTUI(app *tview.Application) {
 	if err := client.InitClient(); err != nil {
-		ShowMessageAndReturnToMenu(app, "Connection failed: %v", err)
+		ShowMessageAndReturnToMenu("Connection failed: %v", err)
 		return
 	}
-	menu := BuildMainMenu(app)
-	app.SetRoot(menu, true)
+	if appPages == nil {
+		appPages = tview.NewPages()
+		app.SetRoot(appPages, true)
+	}
+	appPages.AddAndSwitchToPage("mainmenu", BuildMainMenu(app), true)
 }
 
 func BuildMainMenu(app *tview.Application) *tview.List {
@@ -25,9 +30,10 @@ func BuildMainMenu(app *tview.Application) *tview.List {
 		AddItem(i18n.T("all_tuples"), "", 'a', func() { ShowAllTuples(app) }).
 		AddItem(i18n.T("add_relation"), "", 'r', func() { ShowAddRelation(app) }).
 		AddItem(i18n.T("delete_relation"), "", 'd', func() { ShowDeleteRelation(app) }).
+		AddItem(i18n.T("delete_relation_list"), "", 'f', func() { ShowDeleteRelationsFiltered(app) }).
 		AddItem(i18n.T("permission_check"), "", 'p', func() { ShowPermissionCheck(app) }).
-		AddItem(i18n.T("backup_create"), "", 'b', func() { ShowBackupCreate(app) }).
-		AddItem(i18n.T("backup_restore"), "", 'l', func() { ShowBackupRestore(app) }).
+		AddItem(i18n.T("backup_create"), "", 'b', func() { ShowBackupCreate() }).
+		AddItem(i18n.T("backup_restore"), "", 'l', func() { ShowBackupRestore() }).
 		AddItem(i18n.T("data_import"), "", 'i', func() { ShowDataImport(app) }).
 		AddItem(i18n.T("quit"), "", 'q', func() { confirmExit(app) })
 
@@ -44,8 +50,8 @@ func confirmExit(app *tview.Application) {
 				app.Stop()
 				os.Exit(0)
 			} else {
-				app.SetRoot(BuildMainMenu(app), true)
+				appPages.SwitchToPage("mainmenu")
 			}
 		})
-	app.SetRoot(modal, true)
+	appPages.AddAndSwitchToPage("confirmExit", modal, true)
 }

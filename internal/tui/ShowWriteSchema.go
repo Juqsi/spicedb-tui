@@ -11,20 +11,19 @@ import (
 
 func ShowWriteSchema(app *tview.Application) {
 	form := tview.NewForm()
-	form = tview.NewForm().
-		AddInputField(i18n.T("upload_schema"), "", 60, nil, nil).
-		AddButton(i18n.T("continue"), func() {
-			schema := form.GetFormItemByLabel(i18n.T("upload_schema")).(*tview.InputField).GetText()
+	form.AddInputField(i18n.T("upload_schema"), "", 200, nil, nil)
+	form.AddButton(i18n.T("continue"), func() {
+		schema := form.GetFormItemByLabel(i18n.T("upload_schema")).(*tview.InputField).GetText()
+		AsyncCallPages(app, i18n.T("uploading_schema"), func() (string, string) {
 			_, err := client.Client.WriteSchema(context.Background(), &v1.WriteSchemaRequest{Schema: schema})
 			if err != nil {
-				ShowMessageAndReturnToMenu(app, "Error writing schema: %v", err)
-			} else {
-				ShowMessageAndReturnToMenu(app, "Schema uploaded successfully.")
+				return i18n.T("error_writing_schema", err), i18n.T("error")
 			}
-		}).
-		AddButton(i18n.T("exit"), func() { app.SetRoot(BuildMainMenu(app), true) })
-
+			return i18n.T("schema_uploaded_success"), i18n.T("upload_schema")
+		})
+	})
+	form.AddButton(i18n.T("exit"), func() { appPages.SwitchToPage("mainmenu") })
 	form.SetBorder(true).SetTitle(i18n.T("upload_schema")).SetTitleAlign(tview.AlignLeft)
-	AddFormReturnESC(form, app, func() { app.SetRoot(BuildMainMenu(app), true) })
-	app.SetRoot(form, true)
+	AddEscBack(form, "mainmenu")
+	appPages.AddAndSwitchToPage("writeschema", form, true)
 }
