@@ -81,7 +81,8 @@
     "error_fetching": "Error fetching: %v",
     "no_tuples": "(no tuples)",
     "no_tuples_in_db": "No tuples in the database.",
-    "loaded_tuples": "Loaded %d tuples."
+    "loaded_tuples": "Loaded %d tuples.",
+    "delete_relation_list": "Delete relation(s) (filtered)"
   },
   "de": {
     "app_title": "SpiceDB TUI Menü",
@@ -165,6 +166,7 @@
     "error_fetching": "Fehler beim Laden: %v",
     "no_tuples": "(keine Tupel)",
     "no_tuples_in_db": "Keine Tupel in der Datenbank.",
-    "loaded_tuples": "%d Tupel geladen."
+    "loaded_tuples": "%d Tupel geladen.",
+    "delete_relation_list": "Relation(en) (gefiltert) löschen"
   }
 }
