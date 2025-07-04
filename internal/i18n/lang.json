@@ -39,7 +39,7 @@
     "invalid_regex": "Invalid regex: %v",
     "error_reading_relations": "Error reading relations: %v",
     "no_relations_found": "No matching relations found.",
-    "will_delete_n_relations": "Will delete %d relation(s).",
+    "will_delete_n_relations": "Will delete [red]%d[white] relation(s).",
     "preview_first_n_only": "(Preview shows only the first %d relations)",
     "delete_confirm_hint": "Press [red]Ctrl+D[white] to delete, [green]ESC[white] to cancel.",
     "delete_preview_title": "🧹 Delete Preview",
@@ -82,7 +82,9 @@
     "no_tuples": "(no tuples)",
     "no_tuples_in_db": "No tuples in the database.",
     "loaded_tuples": "Loaded %d tuples.",
-    "delete_relation_list": "Delete relation(s) (filtered)"
+    "delete_relation_list": "Delete relation(s) (filtered)",
+    "language": "Language",
+    "config_menu": "Configure connection"
   },
   "de": {
     "app_title": "SpiceDB TUI Menü",
@@ -124,7 +126,7 @@
     "invalid_regex": "Ungültiger Regex: %v",
     "error_reading_relations": "Fehler beim Lesen der Relationen: %v",
     "no_relations_found": "Keine passenden Relationen gefunden.",
-    "will_delete_n_relations": "%d Relation(en) werden gelöscht.",
+    "will_delete_n_relations": "[red]%d[white] Relation(en) werden gelöscht.",
     "preview_first_n_only": "(Vorschau zeigt nur die ersten %d Relationen)",
     "delete_confirm_hint": "Drücke [red]Ctrl+D[white] zum Löschen, [green]ESC[white] zum Abbrechen.",
     "delete_preview_title": "🧹 Löschvorschau",
@@ -167,6 +169,8 @@
     "no_tuples": "(keine Tupel)",
     "no_tuples_in_db": "Keine Tupel in der Datenbank.",
     "loaded_tuples": "%d Tupel geladen.",
-    "delete_relation_list": "Relation(en) (gefiltert) löschen"
+    "delete_relation_list": "Relation(en) (gefiltert) löschen",
+    "language": "Sprache",
+    "config_menu": "Verbindung konfigurieren"
   }
 }

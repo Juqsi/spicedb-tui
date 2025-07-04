@@ -13,15 +13,14 @@ func ShowMessageAndReturnToMenu(msg string, args ...interface{}) {
 		SetDynamicColors(true).
 		SetDoneFunc(func(key tcell.Key) {
 			appPages.SwitchToPage("mainmenu")
-		}).
-		SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
-			// ESC oder beliebige Taste schließt zurück zum Hauptmenü
-			if event.Key() == tcell.KeyEsc || event.Key() == tcell.KeyEnter || event.Key() == tcell.KeyRune {
-				appPages.SwitchToPage("mainmenu")
-				return nil
-			}
-			return event
 		})
+	tv.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+		if event.Key() == tcell.KeyEsc || event.Key() == tcell.KeyEnter || event.Key() == tcell.KeyRune {
+			appPages.SwitchToPage("mainmenu")
+			return nil
+		}
+		return event
+	})
 	tv.SetBorder(true).SetTitle(i18n.T("message"))
 	appPages.AddAndSwitchToPage("msgpage", tv, true)
 }
