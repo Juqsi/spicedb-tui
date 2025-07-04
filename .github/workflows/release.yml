@@ -75,8 +75,7 @@ jobs:
         run: |
           git fetch --tags
           tag=$(git describe --tags --abbrev=0)
-          echo "RELEASE_VERSION=${tag#v}" >> $GITHUB_ENV
-
+          echo "RELEASE_VERSION=$tag" >> $GITHUB_ENV
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
