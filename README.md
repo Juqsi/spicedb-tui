@@ -7,9 +7,6 @@ You can get started quickly by [downloading pre-built binaries](https://github.c
 
 ---
 
-Falls du es lieber noch kürzer, noch sachlicher, oder auf Deutsch möchtest, sag Bescheid!
----
-
 ## Features
 
 * View, edit, and upload schema definitions
