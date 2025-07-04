@@ -87,15 +87,15 @@ jobs:
           export CGO_ENABLED=0
           export GOOS=${{ matrix.goos }}
           export GOARCH=${{ matrix.goarch }}
-          out_name=spicui
-          [ "${{ matrix.goos }}" = "windows" ] && out_name=spicui.exe
-          go build -ldflags "-X main.Version=${RELEASE_VERSION}" -o $out_name ./cmd
+          out_name="spicui-${GOOS}-${GOARCH}"
+          [ "${{ matrix.goos }}" = "windows" ] && out_name="${out_name}.exe"
+          go build -ldflags "-X main.Version=${RELEASE_VERSION}" -o "$out_name" ./cmd
 
       - name: Upload binary to Release
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: spicui*
+          file: spicui-${{ matrix.goos }}-${{ matrix.goarch }}*
           tag: ${{ env.RELEASE_VERSION }}
           overwrite: true
           file_glob: true
