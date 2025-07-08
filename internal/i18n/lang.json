@@ -84,7 +84,9 @@
     "loaded_tuples": "Loaded %d tuples.",
     "delete_relation_list": "Delete relation(s) (filtered)",
     "language": "Language",
-    "config_menu": "Configure connection"
+    "config_menu": "Configure connection",
+    "schema_file_path": "Path to schema file (optional)",
+    "schema_placeholder": "Enter schema here..."
   },
   "de": {
     "app_title": "SpiceDB TUI Menü",
@@ -171,6 +173,8 @@
     "loaded_tuples": "%d Tupel geladen.",
     "delete_relation_list": "Relation(en) (gefiltert) löschen",
     "language": "Sprache",
-    "config_menu": "Verbindung konfigurieren"
+    "config_menu": "Verbindung konfigurieren",
+    "schema_file_path": "Pfad zur Schema-Datei (optional)",
+    "schema_placeholder": "Schema eingeben..."
   }
 }
