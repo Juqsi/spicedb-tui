@@ -10,9 +10,12 @@ You can get started quickly by [downloading pre-built binaries](https://github.c
 ## Features
 
 * View, edit, and upload schema definitions
-* Browse, filter, create, and delete relationships (tuples)
+* Interactive tuple explorer: filter, page, and drill down through resources, subjects, and subject sets
+* Create and delete relationships (tuples)
 * Batch and filtered deletes with regex support
-* Check permissions interactively
+* Check permissions interactively, with an explanation trace showing *why* access is granted or denied
+* Explore permission trees (ExpandPermissionTree) with on-demand drill-down and cycle detection
+* Watch relationship changes live
 * Create and restore SpiceDB backups
 * Multilingual interface (currently English & German, easily extendable)
 * Configurable connection and language from within the TUI
@@ -57,7 +60,7 @@ Configure your SpiceDB endpoint, token, and preferred language either through th
 
 ## Requirements
 
-* Go 1.20 or newer
+* Go 1.24 or newer
 * A running [SpiceDB](https://spicedb.dev) instance
 * A valid preshared token
 

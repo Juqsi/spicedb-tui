@@ -1,6 +1,6 @@
 module spicedb-tui
 
-go 1.24
+go 1.24.0
 
 require (
 	github.com/authzed/authzed-go v1.4.0

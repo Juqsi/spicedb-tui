@@ -19,8 +19,12 @@ func InitClient() error {
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpcutil.WithInsecureBearerToken(config.Current.Token),
 	)
+	if err != nil {
+		return err
+	}
+
 	go func() {
-		_, err = Client.ReadSchema(context.Background(), &v1.ReadSchemaRequest{})
+		_, _ = Client.ReadSchema(context.Background(), &v1.ReadSchemaRequest{})
 	}()
-	return err
+	return nil
 }

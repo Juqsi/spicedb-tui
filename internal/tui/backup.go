@@ -16,22 +16,11 @@ func ShowBackupCreate() {
 	tv := tview.NewTextView().SetDynamicColors(true).SetScrollable(true)
 	tv.SetBorder(true).SetTitle(i18n.T("backup_create"))
 
-	schemaResp, err := client.Client.ReadSchema(context.Background(), &v1.ReadSchemaRequest{})
+	objectTypes, err := schemaObjectTypes(context.Background())
 	if err != nil {
 		tv.SetText(i18n.T("error_reading_schema", err))
 		appPages.AddAndSwitchToPage("backupcreate", AddEscBack(tv, "mainmenu"), true)
 		return
-	}
-
-	var objectTypes []string
-	for _, line := range strings.Split(schemaResp.SchemaText, "\n") {
-		line = strings.TrimSpace(line)
-		if strings.HasPrefix(line, "definition ") {
-			parts := strings.Fields(line)
-			if len(parts) >= 2 {
-				objectTypes = append(objectTypes, parts[1])
-			}
-		}
 	}
 
 	var backupData []string
