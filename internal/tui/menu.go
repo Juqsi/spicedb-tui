@@ -26,6 +26,7 @@ func BuildMainMenu(app *tview.Application) *tview.List {
 	menu := tview.NewList().
 		AddItem(i18n.T("show_schema"), "", 's', func() { ShowSchema(app) }).
 		AddItem(i18n.T("upload_schema"), "", 'w', func() { ShowWriteSchema(app) }).
+		AddItem(i18n.T("tuple_explorer"), "", 't', func() { ShowTupleExplorer(app) }).
 		AddItem(i18n.T("object_relations"), "", 'o', func() { ShowObjectRelations(app) }).
 		AddItem(i18n.T("user_relations"), "", 'u', func() { ShowUserRelations(app) }).
 		AddItem(i18n.T("all_tuples"), "", 'a', func() { ShowAllTuples(app) }).
@@ -33,6 +34,8 @@ func BuildMainMenu(app *tview.Application) *tview.List {
 		AddItem(i18n.T("delete_relation"), "", 'd', func() { ShowDeleteRelation(app) }).
 		AddItem(i18n.T("delete_relation_list"), "", 'f', func() { ShowDeleteRelationsFiltered(app) }).
 		AddItem(i18n.T("permission_check"), "", 'p', func() { ShowPermissionCheck(app) }).
+		AddItem(i18n.T("expand_tree"), "", 'e', func() { ShowExpandTree(app) }).
+		AddItem(i18n.T("watch_changes"), "", 'm', func() { ShowWatch(app) }).
 		AddItem(i18n.T("backup_create"), "", 'b', func() { ShowBackupCreate() }).
 		AddItem(i18n.T("backup_restore"), "", 'l', func() { ShowBackupRestore() }).
 		AddItem(i18n.T("data_import"), "", 'i', func() { ShowDataImport(app) }).

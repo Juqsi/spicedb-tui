@@ -2,7 +2,6 @@ package tui
 
 import (
 	"context"
-	"fmt"
 	v1 "github.com/authzed/authzed-go/proto/authzed/api/v1"
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
@@ -100,12 +99,7 @@ func showDeleteRelationsFilteredForm(app *tview.Application, resVal, subVal, rel
 					})
 
 					if len(previewLines) < 100 {
-						line := fmt.Sprintf("%s:%s#%s@%s:%s",
-							r.Resource.ObjectType, r.Resource.ObjectId,
-							r.Relation,
-							r.Subject.Object.ObjectType, r.Subject.Object.ObjectId,
-						)
-						previewLines = append(previewLines, line)
+						previewLines = append(previewLines, formatRelationship(r))
 					}
 				}
 
